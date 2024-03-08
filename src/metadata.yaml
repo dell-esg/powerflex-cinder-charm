@@ -1,0 +1,22 @@
+name: cinder-powerflex
+summary: Dell PowerFlex integration for OpenStack Block Storage
+maintainer: OpenStack Charmers <openstack-charmers@lists.ubuntu.com>
+description: |
+  Cinder is the block storage service for the Openstack project.
+  This charm provides a Dell PowerFlex backend for Cinder.
+tags:
+  - openstack
+  - storage
+  - file-servers
+  - misc
+series:
+  - jammy
+subordinate: true
+provides:
+  storage-backend:
+    interface: cinder-backend
+    scope: container
+requires:
+  juju-info:
+    interface: juju-info
+    scope: container
