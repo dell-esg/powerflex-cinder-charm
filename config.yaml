@@ -1,0 +1,71 @@
+options:
+  volume-backend-name:
+    type: string
+    description: |
+        Volume backend name for the backend. The default value is the
+        application name in the Juju model, e.g. "cinder-sf-mybackend"
+        if it's deployed as `juju deploy cinder-solidfire cinder-sf-mybackend`.
+        A common backend name can be set to multiple backends with the
+        same characters so that those can be treated as a single virtual
+        backend associated with a single volume type.
+  san-ip:
+    type: string
+    default: !!null ""
+    description: IP address of PowerFlex Gateway.
+  san-login:
+    type: string
+    default: admin
+    description: |
+        Username for PowerFlex Gateway user. Must have administrative 
+        privileges.
+  san-password:
+    type: string
+    default: password
+    description: Password for PowerFlex Gateway user.
+  powerflex-max-over-subscription-ratio:
+    type: string
+    default: "10.0"
+    description: Maximum oversubscription ratio allowed.
+  san-thin-provision:
+    type: boolean
+    default: true
+    description: Provisioning type. Can be thick or thin (default).
+  powerflex-storage-pools:
+    type: string
+    default: "PD1:SP1"
+    description: | 
+        Colon separated Protection Domain and Storage Pool use for storage
+        allocation. Can be configured to use multiple combination of 
+        Protection Domain and Storage Pool, and separate items by a comma.
+  powerflex-allow-migration-during-rebuild:
+    type: boolean
+    default: false
+    description: Allow volume migration during rebuild.
+  powerflex-allow-non-padded-volumes:
+    type: boolean
+    default: false
+    description: |
+         Allow volumes to be created in Storage Pools when zero padding is
+         disabled. This option should not be enabled if multiple tenants use
+         volumes from a shared Storage Pool.
+  powerflex-rest-server-port:
+    type: string
+    default: "443"
+    description: PowerFlex Gateway REST secured port to use.
+  powerflex-round-volume-capacity:
+    type: boolean
+    default: true
+    description: |
+        Round volume sizes up to 8GB boundaries. PowerFlex OS requires 
+        volumes to be sized in multiples of 8GB. If set to False, volume 
+        creation will fail for volumes not sized properly.
+  rest-api-connect-timeout:
+    type: string
+    default: "30"
+    description: Connection timeout value (in seconds) for REST calls.
+  rest-api-read-timeout:
+    type: string
+    default: "30"
+    description: Read timeout value (in seconds) for REST calls.
+
+
