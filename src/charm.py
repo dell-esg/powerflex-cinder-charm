@@ -24,19 +24,21 @@ class CinderPowerflexCharm(CinderStoragePluginCharm):
     PACKAGES = ['cinder-common']
     # Overriden from the parent. May be set depending on the charm's properties
     stateless = True
+    # Actibe/Active configuration is not supported at this time
+    active_actibe= False
     
 
     mandatory_config = [
         'san-ip', 'san-login', 'san-password'
     ]
 
-    def cinder_configuration(self, charm_config) -> 'list[tuple]':
+    def cinder_configuration(self, charm_config):
         """Return the configuration to be set by cinder"""
         cget = charm_config.get
 
         volume_backend_name = cget('volume-backend-name')
 
-        driver_options = [
+        driver_options_common = [
             ('volume_driver', VOLUME_DRIVER),
             ('volume_backend_name', volume_backend_name),
             ('san_ip', cget('san-ip')),
@@ -56,5 +58,9 @@ class CinderPowerflexCharm(CinderStoragePluginCharm):
             ('rest_api_connect_timeout', cget('rest-api-connect-timeout')),
             ('rest_api_read_timeout', cget('rest-api-read-timeout'))
         ]
+<<<<<<< HEAD:src/charm.py
         final_options = driver_options
         return final_options
+=======
+        return driver_options_common 
+>>>>>>> 1135e5ef572b6d7c93607461520563c991c38200:src/lib/charm/openstack/charm.py
