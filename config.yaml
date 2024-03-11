@@ -8,17 +8,17 @@ options:
         A common backend name can be set to multiple backends with the
         same characters so that those can be treated as a single virtual
         backend associated with a single volume type.
-  san-ip:
+  powerflexgw-ip:
     type: string
     default: !!null ""
-    description: IP address of PowerFlex Gateway.
-  san-login:
+    description: IP address or hostname of the PowerFlex Gateway.
+  powerflexgw-login:
     type: string
     default: admin
     description: |
         Username for PowerFlex Gateway user. Must have administrative 
         privileges.
-  san-password:
+  powerflexgw-password:
     type: string
     default: password
     description: Password for PowerFlex Gateway user.
@@ -26,7 +26,7 @@ options:
     type: string
     default: "10.0"
     description: Maximum oversubscription ratio allowed.
-  san-thin-provision:
+  powerflex-san-thin-provision:
     type: boolean
     default: true
     description: Provisioning type. Can be thick or thin (default).
@@ -49,8 +49,8 @@ options:
          disabled. This option should not be enabled if multiple tenants use
          volumes from a shared Storage Pool.
   powerflex-rest-server-port:
-    type: string
-    default: "443"
+    type: int
+    default: 443
     description: PowerFlex Gateway REST secured port to use.
   powerflex-round-volume-capacity:
     type: boolean
@@ -59,13 +59,13 @@ options:
         Round volume sizes up to 8GB boundaries. PowerFlex OS requires 
         volumes to be sized in multiples of 8GB. If set to False, volume 
         creation will fail for volumes not sized properly.
-  rest-api-connect-timeout:
-    type: string
-    default: "30"
+  powerflex-rest-api-connect-timeout:
+    type: int
+    default: 30
     description: Connection timeout value (in seconds) for REST calls.
-  rest-api-read-timeout:
-    type: string
-    default: "30"
+  powerflex-rest-api-read-timeout:
+    type: int
+    default: 30
     description: Read timeout value (in seconds) for REST calls.
 
 
