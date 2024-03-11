@@ -57,6 +57,10 @@ Connection timeout value (in seconds) for REST API calls to the PowerFlex Gatewa
 
 Read timeout value (in seconds) for REST API calls to the PowerFlex Gateway. If not specified, the value of 30s will be set.
 
+### `powerflex-replication-config`
+
+Specifies the settings for enabling the replication. Only one replication is supported for each backend.
+
 ## Deployment
 
 This charm's primary use is as a backend for the cinder charm. To do so, add a relation betweeen both charms:

@@ -67,5 +67,24 @@ options:
     type: int
     default: 30
     description: Read timeout value (in seconds) for REST calls.
+  powerflex-replication-config:
+    type: string
+    default: !!null ""
+    description: | 
+        Specific replication configuration settings. Must be set under
+        the form of 
+        backend_id:<PowerFlexReplicationDevice>,
+        san_ip: <ReplicationGatewayIP>,
+        san_login: <ReplicationGatewayUser>,
+        san_password: <ReplicationGatewayPassword>
+        Where: 
+        - PowerFlexReplicationDevice represents the replication paired
+          between the two systems
+        - ReplicationGatewayIP is the IP of hostname of the remote 
+          PowerFlex Gateway
+        - ReplicationGatewayUser is the user of the remote PowerFlex
+          Gateway
+        - ReplicationGatewayPassword is the password used to authenticate
+          to the remote PowerFlex Gateway
 
 

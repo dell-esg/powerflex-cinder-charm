@@ -46,13 +46,13 @@ class CinderPowerflexCharm(CinderStoragePluginCharm):
         raw_options = [
             ('volume_driver', VOLUME_DRIVER),
             ('volume_backend_name', volume_backend_name),
-            ('san_ip', cget('san-ip')),
-            ('san_login', cget('san-login')),
-            ('san_password', cget('san-password')),
+            ('san_ip', cget('powerflexgw-ip')),
+            ('san_login', cget('powerflexgw-login')),
+            ('san_password', cget('powerflexgw-password')),
             ('powerflex_storage_pools', cget('powerflex-storage-pools')),
             ('powerflex_max_over_subscription_ratio', cget(
                 'powerflex-max-over-subscription-ratio')),
-            ('san_thin_provision', cget('san-thin-provision')),
+            ('san_thin_provision', cget('powerflex-san-thin-provision')),
             ('powerflex_allow_migration_during_rebuild', cget(
                 'powerflex-allow-migration-during-rebuild')),
             ('powerflex_allow_non_padded_volumes', cget(
@@ -60,8 +60,11 @@ class CinderPowerflexCharm(CinderStoragePluginCharm):
             ('powerflex_rest_server_port', cget('powerflex-rest-server-port')),
             ('powerflex_round_volume_capacity', cget(
                 'powerflex-round-volume-capacity')),
-            ('rest_api_connect_timeout', cget('rest-api-connect-timeout')),
-            ('rest_api_read_timeout', cget('rest-api-read-timeout'))
+            ('rest_api_connect_timeout', cget(
+                'powerflex-rest-api-connect-timeout')),
+            ('rest_api_read_timeout', cget(
+                'powerflex-rest-api-read-timeout')),
+            ('replication_device', cget('powerflex-replication-config'))
         ]
         
         options = [(x, y) for x, y in raw_options if y]
