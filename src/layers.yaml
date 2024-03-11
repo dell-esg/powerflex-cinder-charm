@@ -1,0 +1,7 @@
+includes: ['layer:openstack', 'interface:cinder-backend']
+config:
+  deletes:
+    - debug
+    - verbose
+    - use-syslog
+    - uner-internal-endpoint
