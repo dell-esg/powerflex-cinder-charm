@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from ops.main import main
 from ops_openstack.plugins.classes import CinderStoragePluginCharm
 
 
@@ -32,13 +33,17 @@ class CinderPowerflexCharm(CinderStoragePluginCharm):
         'san-ip', 'san-login', 'san-password'
     ]
 
-    def cinder_configuration(self, charm_config):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._stored.is_started = True
+
+    def cinder_configuration(self, charm_config) -> 'list[tuple]':
         """Return the configuration to be set by cinder"""
         cget = charm_config.get
 
         volume_backend_name = cget('volume-backend-name')
 
-        driver_options_common = [
+        raw_options = [
             ('volume_driver', VOLUME_DRIVER),
             ('volume_backend_name', volume_backend_name),
             ('san_ip', cget('san-ip')),
@@ -58,9 +63,9 @@ class CinderPowerflexCharm(CinderStoragePluginCharm):
             ('rest_api_connect_timeout', cget('rest-api-connect-timeout')),
             ('rest_api_read_timeout', cget('rest-api-read-timeout'))
         ]
-<<<<<<< HEAD:src/charm.py
-        final_options = driver_options
-        return final_options
-=======
-        return driver_options_common 
->>>>>>> 1135e5ef572b6d7c93607461520563c991c38200:src/lib/charm/openstack/charm.py
+        
+        options = [(x, y) for x, y in raw_options if y]
+        return options
+
+if __name__ == '__main__':
+    main(CinderPowerflexCharm)
