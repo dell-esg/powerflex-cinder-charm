@@ -14,16 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from ops_openstack.plugins.classes import CinderStoragePluginCharm
 
-import charms_openstack.charm
-
-charms_openstack.charm.use_defaults('charm.default-select-release')
 
 VOLUME_DRIVER = 'cinder.volume.drivers.dell_emc.powerflex.driver.PowerFlexDriver'
 
-
-class CinderPowerflexCharm(
-    charms_openstack.charm.CinderStoragePluginCharm):
+class CinderPowerflexCharm(CinderStoragePluginCharm):
         
     PACKAGES = ['cinder-common']
     # Overriden from the parent. May be set depending on the charm's properties
