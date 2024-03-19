@@ -29,6 +29,8 @@ from pathlib import Path
 VOLUME_DRIVER = 'cinder.volume.drivers.dell_emc.powerflex.driver.PowerFlexDriver'
 CONNECTOR_DIR = '/opt/emc/scaleio/openstack'
 CONNECTOR_FILE = 'connector.conf'
+CONNECTOR_DIR = '/opt/emc/scaleio/openstack'
+CONNECTOR_FILE = 'connector.conf'
 
 class CinderPowerflexCharm(CinderStoragePluginCharm):
         
