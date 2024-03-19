@@ -17,8 +17,16 @@
 from ops.main import main
 from ops_openstack.plugins.classes import CinderStoragePluginCharm
 
+import charmhelpers.core as ch_core
+
+from charmhelpers.core.templating import render
+
+import os, stat
+from pathlib import Path
 
 VOLUME_DRIVER = 'cinder.volume.drivers.dell_emc.powerflex.driver.PowerFlexDriver'
+CONNECTOR_DIR = '/opt/emc/scaleio/openstack'
+CONNECTOR_FILE = 'connector.conf'
 
 class CinderPowerflexCharm(CinderStoragePluginCharm):
         
@@ -69,6 +77,25 @@ class CinderPowerflexCharm(CinderStoragePluginCharm):
         
         options = [(x, y) for x, y in raw_options if y]
         return options
+    
+    def on_config(self, event):
+        self.create_connector()
+        self.update_status()
+
+    def create_connector(self):
+        """Create the connector.conf file and populate with data"""
+        config = dict(self.framework.model.config)
+        powerflex_backends = self.cinder_configuration(config
+        filename = os.path.join(CONNECTOR_DIR, CONNECTOR_FILE)
+        ch_core.host.mkdir(CONNECTOR_DIR)
+
+        rendered_config = render(
+            source = "connector.conf",
+            target = filename,
+            context = {'backends': powerflex_backends},
+            perms = 0o600
+            )
+        
 
 if __name__ == '__main__':
     main(CinderPowerflexCharm)
