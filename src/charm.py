@@ -18,6 +18,7 @@ from ops.main import main
 from ops_openstack.plugins.classes import CinderStoragePluginCharm
 
 import charmhelpers.core as ch_core
+from charmhelpers.core.hookenv import status_set
 
 from charmhelpers.core.templating import render
 
@@ -54,7 +55,7 @@ class CinderPowerflexCharm(CinderStoragePluginCharm):
         cget = charm_config.get
 
         volume_backend_name = cget('volume-backend-name')
-
+        
         raw_options = [
             ('volume_driver', VOLUME_DRIVER),
             ('volume_backend_name', volume_backend_name),
@@ -88,6 +89,7 @@ class CinderPowerflexCharm(CinderStoragePluginCharm):
 
     def create_connector(self):
         """Create the connector.conf file and populate with data"""
+        status_set('maintenance','Configuring connector.conf file')
         config = dict(self.framework.model.config)
         powerflex_backend = dict(self.cinder_configuration(config))
         powerflex_config = {}
