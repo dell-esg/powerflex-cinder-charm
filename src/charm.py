@@ -93,10 +93,12 @@ class CinderPowerflexCharm(CinderStoragePluginCharm):
         config = dict(self.framework.model.config)
         powerflex_backend = dict(self.cinder_configuration(config))
         powerflex_config = {}
+        # Get cinder config stanza name.
+        powerflex_config['cinder_name'] = self.framework.model.app.name
         filename = os.path.join(CONNECTOR_DIR, CONNECTOR_FILE)
         ch_core.host.mkdir(CONNECTOR_DIR)
 
-        filter_params = ['volume_backend_name', 'san_password']
+        filter_params = ['san_password']
 
         # If replication is enabled, add the filter to the filter_params list
         if 'replication_device' in powerflex_backend:
