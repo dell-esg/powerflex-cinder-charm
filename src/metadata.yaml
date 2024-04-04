@@ -11,6 +11,11 @@ tags:
   - misc
 series:
   - jammy
+resources:
+  sdc-deb-package:
+    type: file
+    description: debian package file used to install SDC
+    filename: sdc-install-package-for-juju.deb
 subordinate: true
 provides:
   storage-backend:

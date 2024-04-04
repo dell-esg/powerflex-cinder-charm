@@ -24,6 +24,9 @@ from charmhelpers.core.templating import render
 
 import os, stat
 from pathlib import Path
+import subprocess
+
+import pdb
 
 
 
@@ -85,11 +88,11 @@ class CinderPowerflexCharm(CinderStoragePluginCharm):
     
     def on_config(self, event):
         self.create_connector()
+        self.install_sdc()
         self.update_status()
 
     def create_connector(self):
         """Create the connector.conf file and populate with data"""
-        status_set('maintenance','Configuring connector.conf file')
         config = dict(self.framework.model.config)
         powerflex_backend = dict(self.cinder_configuration(config))
         powerflex_config = {}
@@ -119,6 +122,39 @@ class CinderPowerflexCharm(CinderStoragePluginCharm):
             context = {'backends': powerflex_config},
             perms = 0o600
             )
+        
+    def install_sdc(self):
+        """Install the SDC debian package in order to get access to the PowerFlex volumes"""
+        
+        
+            # Yes
+                # Get the DPKHG file
+                
+                # Run DPKG
+                # Check the service was started successfully
+            # No
+                # Throws an error
+        config = dict(self.framework.model.config)
+        resource_path = self.model.resources.fetch("sdc-deb-package")
+        pdb.set_trace()
+        # Get the .deb file name from config file
+        sdc_package_file = config['powerflex-sdc-deb-file']
+        # Check if the file exists
+        if os.path.isfile(sdc_package_file):
+            # Get the MDM IP from config file
+            sdc_mdm_ips = config['powerflex-sdc-mdm-ips']
+            install_cmd = f"MDM={sdc_mdm_ips} dpkg -i {sdc_package_file}" 
+            subprocess.run(install_cmd.split(), shell=True)
+
+            pass
+        else:
+            pass
+        
+
+
+        
+        
+
         
 
 if __name__ == '__main__':

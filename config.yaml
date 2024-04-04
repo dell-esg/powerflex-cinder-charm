@@ -87,5 +87,9 @@ options:
           Gateway
         - ReplicationGatewayPassword is the password used to authenticate
           to the remote PowerFlex Gateway
+  powerflex-sdc-mdm-ips:
+    type: string
+    default: !!null ""
+    description: list of comma separated MDM IPs used for SDC connection
 
 
