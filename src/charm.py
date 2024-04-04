@@ -18,12 +18,16 @@ from ops.main import main
 from ops_openstack.plugins.classes import CinderStoragePluginCharm
 
 import charmhelpers.core as ch_core
-from charmhelpers.core.hookenv import status_set
+from charmhelpers.core.hookenv import status_set, log
 
 from charmhelpers.core.templating import render
+from charmhelpers.core.host import service_running
 
 import os, stat
 from pathlib import Path
+import subprocess
+
+import pdb
 
 
 
@@ -85,11 +89,11 @@ class CinderPowerflexCharm(CinderStoragePluginCharm):
     
     def on_config(self, event):
         self.create_connector()
+        self.install_sdc()
         self.update_status()
 
     def create_connector(self):
         """Create the connector.conf file and populate with data"""
-        status_set('maintenance','Configuring connector.conf file')
         config = dict(self.framework.model.config)
         powerflex_backend = dict(self.cinder_configuration(config))
         powerflex_config = {}
@@ -113,6 +117,7 @@ class CinderPowerflexCharm(CinderStoragePluginCharm):
                     powerflex_config[param] = powerflex_backend[param]
 
         # Render the templates/connector.conf and create the /opt/emc/scaleio/openstack/connector.conf with root access only
+        log("Rendering connector.conf template with config {}".format(powerflex_config))
         rendered_config = render(
             source = "connector.conf",
             target = filename,
@@ -120,6 +125,32 @@ class CinderPowerflexCharm(CinderStoragePluginCharm):
             perms = 0o600
             )
         
+    def install_sdc(self):
+        """Install the SDC debian package in order to get access to the PowerFlex volumes"""
+        config = dict(self.framework.model.config)
+        sdc_package_file = self.model.resources.fetch("sdc-deb-package")
+        # Check if the file exists
+        if os.path.isfile(sdc_package_file):
+            # Get the MDM IP from config file
+            sdc_mdm_ips = config['powerflex-sdc-mdm-ips']
+            # Install the SDC package
+            install_cmd = f"sudo MDM_IP={sdc_mdm_ips} dpkg -i {sdc_package_file}" 
+            log("Installing SDC kernel module with MDM(s) {}".format(sdc_mdm_ips))
+            result = subprocess.run(install_cmd.split(), capture_output=True, text=True )
+            exit_code = result.returncode
+            if exit_code != 0:
+                log("An error occured during the SDC installation: {}.".format(result.stderr),
+                    level=ERROR)
+            else:
+                log("SDC installed successfully, stdout: {}".format(result.stdout))
+                # Check if service scini is running
+                if service_running("scini"):
+                    log("SDC scini service running. SDC Installation complete.")
+                else:
+                    log("SDC scini service has encountered errors while starting", level=ERROR)
+        else:
+            log("The package required for SDC installation is missing.", level=ERROR)
+               
 
 if __name__ == '__main__':
     main(CinderPowerflexCharm)
