@@ -28,6 +28,9 @@ from pathlib import Path
 import subprocess
 
 import pdb
+import subprocess
+
+import pdb
 
 
 
@@ -89,6 +92,7 @@ class CinderPowerflexCharm(CinderStoragePluginCharm):
     
     def on_config(self, event):
         self.create_connector()
+        self.install_sdc()
         self.install_sdc()
         self.update_status()
 
