@@ -57,15 +57,13 @@ class CinderPowerflexCharm(CinderStoragePluginCharm):
         super().__init__(*args, **kwargs)
         self._stored.is_started = True
 
-    def cinder_configuration(self, charm_config) -> 'list[tuple]':
-        """Return the configuration to be set by cinder"""
+    def powerflex_configuration(self, charm_config) -> 'list[tuple]':
+        """Returns the configuration to be set by the caller."""
         cget = charm_config.get
 
-        volume_backend_name = cget('volume-backend-name')
-        
         raw_options = [
             ('volume_driver', VOLUME_DRIVER),
-            ('volume_backend_name', volume_backend_name),
+            ('volume_backend_name', cget('volume-backend-name')),
             ('san_ip', cget('powerflexgw-ip')),
             ('san_login', cget('powerflexgw-login')),
             ('san_password', cget('powerflexgw-password')),
