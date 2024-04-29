@@ -96,7 +96,7 @@ class CinderPowerflexCharm(CinderStoragePluginCharm):
     def create_connector(self):
         """Create the connector.conf file and populate with data"""
         config = dict(self.framework.model.config)
-        powerflex_backend = dict(self.cinder_configuration(config))
+        powerflex_backend = dict(self.powerflex_configuration(config))
         powerflex_config = {}
         # Get cinder config stanza name.
         powerflex_config['cinder_name'] = self.framework.model.app.name
