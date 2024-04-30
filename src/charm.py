@@ -57,9 +57,10 @@ class CinderPowerflexCharm(CinderStoragePluginCharm):
         super().__init__(*args, **kwargs)
         self._stored.is_started = True
 
-    def powerflex_configuration(self, charm_config) -> 'list[tuple]':
-        """Returns the configuration to be set by the caller."""
+    def cinder_configuration(self, charm_config) -> 'list[tuple]':
+        """Returns the configuration to be set by Cinder."""
         cget = charm_config.get
+        service = cget('volume-backend-name')
 
         raw_options = [
             ('volume_driver', VOLUME_DRIVER),
@@ -96,10 +97,10 @@ class CinderPowerflexCharm(CinderStoragePluginCharm):
     def create_connector(self):
         """Create the connector.conf file and populate with data"""
         config = dict(self.framework.model.config)
-        powerflex_backend = dict(self.powerflex_configuration(config))
+        powerflex_backend = dict(self.cinder_configuration(config))
         powerflex_config = {}
         # Get cinder config stanza name.
-        powerflex_config['cinder_name'] = self.framework.model.app.name
+        powerflex_config['cinder_name'] = powerflex_backend['volume_backend_name']
         filename = os.path.join(CONNECTOR_DIR, CONNECTOR_FILE)
         ch_core.host.mkdir(CONNECTOR_DIR)
 
@@ -148,9 +149,9 @@ class CinderPowerflexCharm(CinderStoragePluginCharm):
                 if service_running("scini"):
                     log("SDC scini service running. SDC Installation complete.")
                 else:
-                    log("SDC scini service has encountered errors while starting", level=ERROR)
+                    log("SDC scini service has encountered errors while starting", level='ERROR')
         else:
-            log("The package required for SDC installation is missing.", level=ERROR)
+            log("The package required for SDC installation is missing.", level='ERROR')
                
 
 if __name__ == '__main__':
