@@ -61,6 +61,10 @@ Read timeout value (in seconds) for REST API calls to the PowerFlex Gateway. If 
 
 Specifies the settings for enabling the replication. Only one replication is supported for each backend.
 
+### `powerflex-sdc-mdm-ips`
+
+Specifies a comma-separated list of MDM IPs. Can be used to defined a VIP also. This is required during the SDC configuration.
+
 ## Deployment
 
 This charm's primary use is as a backend for the cinder charm. To do so, add a relation betweeen both charms:
