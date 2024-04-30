@@ -60,8 +60,7 @@ class CinderPowerflexCharm(CinderStoragePluginCharm):
     def cinder_configuration(self, charm_config) -> 'list[tuple]':
         """Returns the configuration to be set by Cinder."""
         cget = charm_config.get
-        service = cget('volume-backend-name')
-
+        
         raw_options = [
             ('volume_driver', VOLUME_DRIVER),
             ('volume_backend_name', cget('volume-backend-name')),
@@ -100,7 +99,7 @@ class CinderPowerflexCharm(CinderStoragePluginCharm):
         powerflex_backend = dict(self.cinder_configuration(config))
         powerflex_config = {}
         # Get cinder config stanza name.
-        powerflex_config['cinder_name'] = powerflex_backend['volume_backend_name']
+        powerflex_config['cinder_name'] = self.framework.model.app.name
         filename = os.path.join(CONNECTOR_DIR, CONNECTOR_FILE)
         ch_core.host.mkdir(CONNECTOR_DIR)
 
