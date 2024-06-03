@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from ops import model
 from ops.main import main
 from ops_openstack.plugins.classes import CinderStoragePluginCharm
 
@@ -88,7 +89,8 @@ class CinderPowerflexCharm(CinderStoragePluginCharm):
         options = [(x, y) for x, y in raw_options if y]
         return options
     
-    def on_config(self, event):
+    def _on_install(self, event):
+        super().on_install(event)
         self.create_connector()
         self.install_sdc()
         self.update_status()
@@ -151,6 +153,7 @@ class CinderPowerflexCharm(CinderStoragePluginCharm):
                     log("SDC scini service has encountered errors while starting", level='ERROR')
         else:
             log("The package required for SDC installation is missing.", level='ERROR')
+            model.BlockedStatus('SDC package missing')
                
 
 if __name__ == '__main__':
