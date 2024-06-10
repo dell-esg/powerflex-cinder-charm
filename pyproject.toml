@@ -20,7 +20,7 @@ line-length = 99
 extend-exclude = ["__pycache__", "*.egg_info"]
 
 [tool.ruff.lint]
-ignore = ["E501", "D107"]
+ignore = ["D107"]
 extend-ignore = [
     "D203",
     "D204",

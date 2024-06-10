@@ -67,7 +67,7 @@ Specifies a comma-separated list of MDM IPs. Can be used to defined a VIP also. 
 
 ## Deployment
 
-This charm's primary use is as a backend for the cinder charm. To do so, add a relation betweeen both charms:
+This charm's primary use is as a backend for the cinder charm. To do so, add a relation between both charms:
 
     juju integrate cinder-powerflex:storage-backend cinder:storage-backend
 
