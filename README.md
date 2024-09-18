@@ -98,4 +98,4 @@ The OpenStack Charms project maintains two documentation guides:
 
 # Bugs
 
-Please report bugs on [Launchpad](https://bugs.launchpad.net/charm-cinder-solidfire/+filebug).
+Please report bugs on [Launchpad](https://bugs.launchpad.net/charm-cinder-powerflex/+filebug).
