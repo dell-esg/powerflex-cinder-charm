@@ -68,8 +68,21 @@ Specifies a comma-separated list of MDM IPs. Can be used to defined a VIP also. 
 ## Deployment
 
 This charm's primary use is as a backend for the cinder charm. To do so, add a relation between both charms:
-
+   
+    juju deploy --config cinder-powerflex-config.yaml --resource sdc-deb-package=../EMC-ScaleIO-sdc-4.5-2.185.Ubuntu.22.04.x86_64.deb cinder-powerflex
     juju integrate cinder-powerflex:storage-backend cinder:storage-backend
+
+Depending on the kernel version that your system runs on, you may have to install the proper SDC kernel module.
+An alternative method which triggers an on-demand compilation process can be used if your SDC is 3.6.3 and higher or 4.5.2 and higher.
+You can refer to the documentation here:
+* [On-demand compilation of the PowerFlex SDC driver][sdc]
+
+This charm doesn't include yet the enablement of the on-demand compilation. In case the scini service can't start and your SDC is at version mentioned above, you can enable the feature by creating an empty file on every nodes which runs the SDC driver.
+    
+    sudo touch /etc/emc/scaleio/scini_sync/.build_scini
+    sudo service scini restart
+
+[sdc]: https://www.dell.com/support/kbdoc/en-us/000224134/how-to-on-demand-compilation-of-the-powerflex-sdc-driver
 
 
 # Documentation
