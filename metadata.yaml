@@ -1,4 +1,4 @@
-name: cinder-powerflex
+name: cinder-dell-powerflex
 summary: Dell PowerFlex integration for OpenStack Block Storage
 maintainer: OpenStack Charmers <openstack-charmers@lists.ubuntu.com>
 description: |
