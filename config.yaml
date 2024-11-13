@@ -3,12 +3,7 @@ options:
     type: string
     default: powerflex
     description: |
-        Volume backend name for the backend. The default value is the
-        application name in the Juju model, e.g. "cinder-powerflex"
-        if it's deployed as `juju deploy cinder-powerflex`.
-        A common backend name can be set to multiple backends with the
-        same characters so that those can be treated as a single virtual
-        backend associated with a single volume type.
+        Volume backend name for the backend. 
   powerflexgw-ip:
     type: string
     default: !!null ""
