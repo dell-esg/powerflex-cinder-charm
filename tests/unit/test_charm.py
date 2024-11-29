@@ -101,7 +101,7 @@ class TestCharm(unittest.TestCase):
                         "cinder": {
                             "/etc/cinder/cinder.conf": {
                                 "sections": {
-                                    "cinder-powerflex": [
+                                    "cinder-dell-powerflex": [
                                         [
                                             "volume_driver",
                                             "cinder.volume.drivers.dell_emc.powerflex.driver.PowerFlexDriver",
@@ -201,7 +201,7 @@ class TestCharm(unittest.TestCase):
             target="/opt/emc/scaleio/openstack/connector.conf",
             context={
                 "backends": {
-                    "cinder_name": "cinder-powerflex",
+                    "cinder_name": "cinder-dell-powerflex",
                     "san_password": "password",
                     "rep_san_password": "password",
                 }
