@@ -13,13 +13,14 @@
 # limitations under the License.
 
 import json
+import unittest
+from unittest.mock import patch
+
 import ops
 import ops.testing
-import unittest
+from ops.model import BlockedStatus
 
 from charm import CinderPowerflexCharm
-from ops.model import BlockedStatus
-from unittest.mock import patch
 
 
 class TestCharm(unittest.TestCase):
