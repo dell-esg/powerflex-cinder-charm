@@ -180,7 +180,7 @@ class TestCharm(unittest.TestCase):
             source="connector.conf",
             target="/opt/emc/scaleio/openstack/connector.conf",
             context = ({"backends": {"cinder_name": "cinder-dell-powerflex", 
-                                     "san_password": "password"}},)
+                                     "san_password": "password"}}),
             perms=0o600,
         )
 
