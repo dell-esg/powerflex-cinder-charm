@@ -12,18 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from charm import CinderPowerflexCharm
-
-import ops
-from ops.model import BlockedStatus
-import ops.testing
-
 import json
-
+import ops
+import ops.testing
 import unittest
+
+from charm import CinderPowerflexCharm
+from ops.model import BlockedStatus
 from unittest.mock import patch
-
-
 
 
 class TestCharm(unittest.TestCase):
@@ -183,7 +179,8 @@ class TestCharm(unittest.TestCase):
         _render.assert_called_once_with(
             source="connector.conf",
             target="/opt/emc/scaleio/openstack/connector.conf",
-            context={"backends": {"cinder_name": "cinder-dell-powerflex", "san_password": "password"}},
+            context = ({"backends": {"cinder_name": "cinder-dell-powerflex", 
+                                     "san_password": "password"}},)
             perms=0o600,
         )
 
