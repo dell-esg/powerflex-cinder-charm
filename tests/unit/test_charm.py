@@ -12,14 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from charm import CinderPowerflexCharm
+
+import ops
+from ops.model import BlockedStatus
+import ops.testing
+
 import json
+
 import unittest
 from unittest.mock import patch
 
-import ops
-import ops.testing
-from charm import CinderPowerflexCharm
-from ops.model import BlockedStatus
+
 
 
 class TestCharm(unittest.TestCase):
