@@ -18,8 +18,9 @@ from unittest.mock import patch
 
 import ops
 import ops.testing
-from charm import CinderPowerflexCharm
 from ops.model import BlockedStatus
+
+from charm import CinderPowerflexCharm
 
 
 class TestCharm(unittest.TestCase):
@@ -101,7 +102,7 @@ class TestCharm(unittest.TestCase):
                         "cinder": {
                             "/etc/cinder/cinder.conf": {
                                 "sections": {
-                                    "cinder-powerflex": [
+                                    "cinder-dell-powerflex": [
                                         [
                                             "volume_driver",
                                             "cinder.volume.drivers.dell_emc.powerflex.driver.PowerFlexDriver",
@@ -179,7 +180,8 @@ class TestCharm(unittest.TestCase):
         _render.assert_called_once_with(
             source="connector.conf",
             target="/opt/emc/scaleio/openstack/connector.conf",
-            context={"backends": {"cinder_name": "cinder-powerflex", "san_password": "password"}},
+            context = ({"backends": {"cinder_name": "cinder-dell-powerflex",
+                                     "san_password": "password"}}),
             perms=0o600,
         )
 
@@ -201,7 +203,7 @@ class TestCharm(unittest.TestCase):
             target="/opt/emc/scaleio/openstack/connector.conf",
             context={
                 "backends": {
-                    "cinder_name": "cinder-powerflex",
+                    "cinder_name": "cinder-dell-powerflex",
                     "san_password": "password",
                     "rep_san_password": "password",
                 }
