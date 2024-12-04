@@ -1,0 +1,90 @@
+options:
+  volume-backend-name:
+    type: string
+    default: powerflex
+    description: |
+        Volume backend name for the backend. 
+  powerflexgw-ip:
+    type: string
+    default: !!null ""
+    description: IP address or hostname of the PowerFlex Gateway.
+  powerflexgw-login:
+    type: string
+    default: admin
+    description: |
+        Username for PowerFlex Gateway user. Must have administrative 
+        privileges.
+  powerflexgw-password:
+    type: string
+    default: password
+    description: Password for PowerFlex Gateway user.
+  powerflex-max-over-subscription-ratio:
+    type: string
+    default: "10.0"
+    description: Maximum oversubscription ratio allowed.
+  powerflex-san-thin-provision:
+    type: boolean
+    default: true
+    description: Provisioning type. Can be thick or thin (default).
+  powerflex-storage-pools:
+    type: string
+    default: "PD1:SP1"
+    description: | 
+        Colon separated Protection Domain and Storage Pool use for storage
+        allocation. Can be configured to use multiple combination of 
+        Protection Domain and Storage Pool, and separate items by a comma.
+  powerflex-allow-migration-during-rebuild:
+    type: boolean
+    default: false
+    description: Allow volume migration during rebuild.
+  powerflex-allow-non-padded-volumes:
+    type: boolean
+    default: false
+    description: |
+         Allow volumes to be created in Storage Pools when zero padding is
+         disabled. This option should not be enabled if multiple tenants use
+         volumes from a shared Storage Pool.
+  powerflex-rest-server-port:
+    type: int
+    default: 443
+    description: PowerFlex Gateway REST secured port to use.
+  powerflex-round-volume-capacity:
+    type: boolean
+    default: true
+    description: |
+        Round volume sizes up to 8GB boundaries. PowerFlex OS requires 
+        volumes to be sized in multiples of 8GB. If set to False, volume 
+        creation will fail for volumes not sized properly.
+  powerflex-rest-api-connect-timeout:
+    type: int
+    default: 30
+    description: Connection timeout value (in seconds) for REST calls.
+  powerflex-rest-api-read-timeout:
+    type: int
+    default: 30
+    description: Read timeout value (in seconds) for REST calls.
+  powerflex-replication-config:
+    type: string
+    default: !!null ""
+    description: | 
+        Specific replication configuration settings. Must be set under
+        the form of 
+        backend_id:<PowerFlexReplicationDevice>,
+        san_ip: <ReplicationGatewayIP>,
+        san_login: <ReplicationGatewayUser>,
+        san_password: <ReplicationGatewayPassword>
+        Where: 
+        - PowerFlexReplicationDevice represents the replication paired
+          between the two systems
+        - ReplicationGatewayIP is the IP of hostname of the remote 
+          PowerFlex Gateway
+        - ReplicationGatewayUser is the user of the remote PowerFlex
+          Gateway
+        - ReplicationGatewayPassword is the password used to authenticate
+          to the remote PowerFlex Gateway
+  powerflex-sdc-mdm-ips:
+    type: string
+    default: !!null ""
+    description: list of comma separated MDM IPs used for SDC connection
+
+
