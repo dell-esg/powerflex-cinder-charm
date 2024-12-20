@@ -4,6 +4,8 @@ maintainer: OpenStack Charmers <openstack-charmers@lists.ubuntu.com>
 description: |
   Cinder is the block storage service for the Openstack project.
   This charm provides a Dell PowerFlex backend for Cinder.
+docs: https://github.com/dell-esg/powerflex-cinder-charm/blob/main/README.md
+source: https://github.com/dell-esg/powerflex-cinder-charm
 tags:
   - openstack
   - storage
@@ -14,7 +16,7 @@ series:
 resources:
   sdc-deb-package:
     type: file
-    description: debian package file used to install SDC
+    description: Debian package file used to install SDC
     filename: sdc-install-package-for-juju.deb
 subordinate: true
 provides:
