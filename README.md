@@ -9,6 +9,8 @@ This charm provides a Dell PowerFlex storage backend for use with the Cinder cha
 
 This section covers common and/or important configuration options. See file `config.yaml` for the full list of options, along with their descriptions and default values. See the [Juju documentation][juju-docs-config-apps] for details on configuring applications.
 
+[juju-docs-config-apps]: https://juju.is/docs/juju/juju-config
+
 ### `powerflexgw-ip`
 
 The PowerFlex Gateway IP or hostname.
