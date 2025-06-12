@@ -14,11 +14,11 @@
 
 import json
 import unittest
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import ops
 import ops.testing
-from ops.model import BlockedStatus
+from ops.model import ActiveStatus, BlockedStatus
 
 from charm import CinderPowerflexCharm
 
@@ -28,6 +28,12 @@ class TestCharm(unittest.TestCase):
         self.harness = ops.testing.Harness(CinderPowerflexCharm)
         self.harness.set_leader(True)
         self.addCleanup(self.harness.cleanup)
+        self.harness.add_resource("sdc-deb-package", "test-content")
+        self.harness.update_config(
+            {
+                "powerflex-sdc-mdm-ips": "192.168.0.0",
+            }
+        )
         self.harness.begin()
         self.charm = self.harness.charm
 
@@ -210,3 +216,84 @@ class TestCharm(unittest.TestCase):
             },
             perms=0o600,
         )
+
+    @patch("ops_openstack.plugins.classes.CinderStoragePluginCharm.on_install")
+    @patch("charmhelpers.contrib.openstack.utils.service_running")
+    @patch("charm.service_running")
+    @patch("subprocess.run")
+    def test_install_sdc_resource_attached_running(
+        self, _subprocess_run, _service_running, _ch_service_running, _on_install
+    ):
+        """Test install sdc when service is running."""
+        self.harness.add_relation(
+            "storage-backend", "cinder-volume", unit_data={"nonce": ""}
+        )
+        self.charm.install_pkgs = MagicMock()
+        self.charm.create_connector = MagicMock()
+
+        _subprocess_run.return_value = MagicMock(returncode=0, stdout="", stderr="")
+        _ch_service_running.return_value = True
+        _service_running.return_value = True
+
+        self.charm.on.install.emit()
+
+        self.assertEqual(self.charm.unit.status, ActiveStatus("Unit is ready"))
+
+    @patch("ops_openstack.plugins.classes.CinderStoragePluginCharm.on_install")
+    @patch("charmhelpers.contrib.openstack.utils.service_running")
+    @patch("charm.service_running")
+    @patch("subprocess.run")
+    def test_install_sdc_resource_attached_not_running(
+        self, _subprocess_run, _service_running, _ch_service_running, _on_install
+    ):
+        """Test install sdc when service fails to start."""
+        self.harness.add_relation(
+            "storage-backend", "cinder-volume", unit_data={"nonce": ""}
+        )
+        self.charm.install_pkgs = MagicMock()
+        self.charm.create_connector = MagicMock()
+
+        _subprocess_run.return_value = MagicMock(returncode=0, stdout="", stderr="")
+        _ch_service_running.return_value = False
+        _service_running.return_value = False
+
+        self.charm.on.install.emit()
+
+        # Verify the charm goes into BlockedStatus.
+        self.assertEqual(
+            self.charm.unit.status, BlockedStatus("Services not running that should be: scini")
+        )
+
+    @patch("ops_openstack.plugins.classes.CinderStoragePluginCharm.on_install")
+    @patch("charmhelpers.contrib.openstack.utils.service_running")
+    @patch("subprocess.run")
+    def test_install_sdc_resource_attached_failed_install(
+        self, _subprocess_run, _service_running, _on_install
+    ):
+        """Test failed installation of deb package."""
+        self.charm.install_pkgs = MagicMock()
+        self.charm.create_connector = MagicMock()
+
+        _subprocess_run.return_value = MagicMock(returncode=128, stdout="", stderr="Error")
+
+        _service_running.return_value = False
+
+        self.charm.on.install.emit()
+
+        self.assertEqual(
+            self.charm.unit.status, BlockedStatus("SDC Debian package failed to install")
+        )
+
+    @patch("ops_openstack.plugins.classes.CinderStoragePluginCharm.on_install")
+    def test_install_sdc_resource_not_provided(self, _on_install):
+        """Test resource not provided blocks status."""
+        self.harness.add_resource("sdc-deb-package", "")
+        self.charm.install_pkgs = MagicMock()
+        self.charm.create_connector = MagicMock()
+
+        self.charm.on.install.emit()
+
+        self.assertEqual(
+            self.charm.unit.status, BlockedStatus("sdc-deb-package resource is missing")
+        )
+
