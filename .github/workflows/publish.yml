@@ -19,3 +19,10 @@ jobs:
           credentials: "${{ secrets.CHARMHUB_TOKEN }}"
           github-token: ${{ secrets.GITHUB_TOKEN }}
           channel: "latest/stable"
+
+      - name: Archive charmcraft logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: charmcraft-logs
+          path: /home/runner/.local/state/charmcraft/log/*.log
