@@ -18,6 +18,7 @@
 
 import logging
 import os
+import re
 import subprocess
 from pathlib import Path
 from typing import Iterable, Optional, Union
@@ -63,8 +64,11 @@ class CinderPowerflexCharm(CinderStoragePluginCharm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self._stored.installed = False
-        self._stored.install_failed = False
+        self._stored.set_default(
+            installed=False,
+            install_failed=False,
+            sdc_package_name=None,
+        )
         self._stored.is_started = True
 
         self.register_status_check(self.resource_status)
@@ -111,16 +115,53 @@ class CinderPowerflexCharm(CinderStoragePluginCharm):
 
         return model.BlockedStatus("sdc-deb-package resource is missing")
 
+    def _get_sdc_package_name(self) -> Optional[str]:
+        """Return the Debian package name for the SDC resource."""
+        if self._stored.sdc_package_name:
+            return self._stored.sdc_package_name
+
+        sdc_package_file = self._get_debian_package_path()
+        if not sdc_package_file:
+            return None
+
+        result = subprocess.run(
+            ["dpkg", "--info", str(sdc_package_file)],
+            capture_output=True,
+            text=True,
+        )
+        package_match = re.search(r"^\s*Package:\s+(.+?)$", result.stdout, re.MULTILINE)
+        if not package_match:
+            logger.warning("Couldn't determine package name from %s", sdc_package_file)
+            return None
+
+        self._stored.sdc_package_name = package_match.group(1)
+        return self._stored.sdc_package_name
+
+    def _is_sdc_installed(self) -> bool:
+        """Return whether dpkg reports the SDC package as installed."""
+        package_name = self._get_sdc_package_name()
+        if not package_name:
+            return False
+
+        result = subprocess.run(
+            ["dpkg-query", "--show", "--showformat=${Status}", package_name],
+            capture_output=True,
+            text=True,
+        )
+        return result.returncode == 0 and result.stdout.strip() == "install ok installed"
+
     def install_status(self):
         """Return the status for the deb installation.
 
         :return: ActiveStatus when the installation of the Debian file is successful,
                  BlockedStatus when the installation failed.
         """
-        if self._stored.installed:
+        if self._is_sdc_installed():
+            self._stored.installed = True
+            self._stored.install_failed = False
             return model.ActiveStatus()
 
-        # TODO: This should really be checked by examining the dpkg install state
+        self._stored.installed = False
         if self._stored.install_failed:
             return model.BlockedStatus("SDC Debian package failed to install")
 
@@ -207,6 +248,9 @@ class CinderPowerflexCharm(CinderStoragePluginCharm):
             # Note: the user has not provided the Debian resource
             logger.error("The package required for SDC installation is missing")
             return
+
+        # Store the name of the SDC package for later use.
+        self._get_sdc_package_name()
 
         # Get the MDM IP from config file
         sdc_mdm_ips = self.model.config["powerflex-sdc-mdm-ips"]
